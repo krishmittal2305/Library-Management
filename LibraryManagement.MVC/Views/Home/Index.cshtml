@@ -1,0 +1,794 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "LibrarySpace - Next-Generation Library Portal";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    
+    <!-- Custom Design System CSS -->
+    <link rel="stylesheet" href="~/css/styles/variables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/components.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/animations.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/landing.css" asp-append-version="true" />
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* --- GLOBAL & UTILITIES --- */
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body { overflow-x: hidden; background: #fafafa; color: #111; }
+        .section-padding { padding: 8rem 2rem; }
+        .section-title { font-size: 3rem; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 1.5rem; text-align: center; }
+        .section-subtitle { font-size: 1.25rem; color: var(--text-secondary); text-align: center; max-width: 600px; margin: 0 auto 4rem; line-height: 1.6; }
+        
+        /* Scroll Reveal Effect */
+        .scroll-reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), filter 0.8s ease; filter: blur(10px); }
+        .scroll-reveal.is-visible { opacity: 1; transform: translateY(0); filter: blur(0); }
+        .stagger-1 { transition-delay: 0.1s; } .stagger-2 { transition-delay: 0.2s; } .stagger-3 { transition-delay: 0.3s; } .stagger-4 { transition-delay: 0.4s; }
+
+        /* --- PRELOADER --- */
+        #preloader { position: fixed; inset: 0; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.6s ease; }
+        .loader-icon { width: 48px; height: 48px; color: var(--accent-color); animation: pulse-icon 1.5s infinite; }
+        .loader-bar { width: 200px; height: 4px; background: #f0f0f0; border-radius: 4px; margin-top: 1.5rem; overflow: hidden; position: relative; }
+        .loader-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--accent-color); animation: load-progress 1.5s ease-out forwards; }
+        @@keyframes pulse-icon { 0% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.7; } 100% { transform: scale(1); opacity: 1; } }
+        @@keyframes load-progress { 0% { width: 0%; } 100% { width: 100%; } }
+
+        /* --- NAVIGATION --- */
+        .landing-nav-wrapper { position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; padding: 1.5rem 1.5rem 0; display: flex; justify-content: center; pointer-events: none; }
+        .landing-nav { pointer-events: auto; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(20px); border: 1px solid rgba(0,0,0,0.06); padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-radius: 50px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); width: 100%; max-width: 1000px; transition: all 0.3s ease; }
+        .landing-nav:hover { box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); background: rgba(255,255,255,0.95); }
+        .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text-primary); }
+
+        /* --- HERO SECTION --- */
+        .hero-section { padding: 12rem 2rem 8rem; text-align: center; position: relative; overflow: hidden; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .hero-bg-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4; z-index: -1; animation: float-blob 10s infinite ease-in-out alternate; }
+        .blob-1 { top: -10%; left: 10%; width: 500px; height: 500px; background: rgba(74, 101, 209, 0.3); }
+        .blob-2 { bottom: 10%; right: 10%; width: 400px; height: 400px; background: rgba(16, 185, 129, 0.2); animation-delay: -5s; }
+        @@keyframes float-blob { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(50px, 30px) scale(1.1); } }
+        
+        .hero-badge { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1rem; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.05); border-radius: 50px; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .hero-title { font-size: 5.5rem; font-weight: 800; letter-spacing: -0.05em; line-height: 1.05; margin-bottom: 1.5rem; background: linear-gradient(135deg, #111111 0%, #3a3a3a 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0px 10px 30px rgba(0, 0, 0, 0.05); }
+        .hero-subtitle { font-size: 1.375rem; color: var(--text-secondary); max-width: 650px; margin: 0 auto 3rem; line-height: 1.6; }
+        .hero-buttons .btn { border-radius: 50px; padding: 1rem 2.5rem; font-size: 1.125rem; transition: transform 0.2s, box-shadow 0.2s; }
+        .hero-buttons .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .scroll-indicator { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: var(--text-secondary); animation: bounce 2s infinite; opacity: 0.5; }
+        @@keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); } 40% { transform: translateY(-15px) translateX(-50%); } 60% { transform: translateY(-7px) translateX(-50%); } }
+
+        /* --- TRUSTED BY (MARQUEE) --- */
+        .marquee-wrapper { border-top: 1px solid rgba(0,0,0,0.05); border-bottom: 1px solid rgba(0,0,0,0.05); padding: 3rem 0; background: #fff; overflow: hidden; display: flex; align-items: center; white-space: nowrap; position: relative; }
+        .marquee-wrapper::before, .marquee-wrapper::after { content: ""; position: absolute; top: 0; width: 150px; height: 100%; z-index: 2; pointer-events: none; }
+        .marquee-wrapper::before { left: 0; background: linear-gradient(to right, #fff 0%, transparent 100%); }
+        .marquee-wrapper::after { right: 0; background: linear-gradient(to left, #fff 0%, transparent 100%); }
+        .marquee-content { display: inline-flex; gap: 4rem; padding-right: 4rem; animation: marquee 30s linear infinite; align-items: center; }
+        .marquee-wrapper:hover .marquee-content { animation-play-state: paused; }
+        @@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
+        .partner-logo { font-size: 1.25rem; font-weight: 700; color: #999; display: flex; align-items: center; gap: 0.5rem; filter: grayscale(100%); opacity: 0.6; transition: all 0.3s; }
+        .partner-logo:hover { filter: grayscale(0%); opacity: 1; color: var(--text-primary); }
+
+        /* --- STATISTICS --- */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; }
+        .stat-card { background: #fff; padding: 2.5rem 1.5rem; border-radius: var(--radius-xl); border: 1px solid rgba(0,0,0,0.05); text-align: center; transition: transform 0.3s, box-shadow 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+        .stat-number { font-size: 3.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1; }
+        .stat-label { color: var(--text-secondary); font-weight: 500; font-size: 1rem; }
+
+        /* --- KEY FEATURES --- */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+        .feature-card { background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: var(--radius-xl); padding: 2.5rem; position: relative; overflow: hidden; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; }
+        .feature-card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(91,124,250,0.03) 0%, transparent 100%); opacity: 0; transition: opacity 0.4s; }
+        .feature-card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.1); border-color: rgba(91,124,250,0.3); }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-icon { width: 56px; height: 56px; background: rgba(91,124,250,0.1); color: var(--accent-color); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; transition: transform 0.4s, background 0.4s; }
+        .feature-card:hover .feature-icon { transform: scale(1.1) rotate(5deg); background: var(--accent-color); color: #fff; }
+        .feature-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; position: relative; z-index: 1; }
+        .feature-desc { color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; margin-bottom: 1.5rem; position: relative; z-index: 1; }
+        .feature-link { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.875rem; font-weight: 600; color: var(--accent-color); text-decoration: none; position: relative; z-index: 1; }
+        .feature-card:hover .feature-link i { transform: translateX(4px); }
+
+        /* --- HOW IT WORKS (TIMELINE) --- */
+        .timeline-container { display: flex; justify-content: space-between; position: relative; max-width: 900px; margin: 0 auto; }
+        .timeline-line { position: absolute; top: 32px; left: 0; width: 100%; height: 2px; background: #eee; z-index: 1; }
+        .timeline-line-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--accent-color); transition: width 1.5s ease; }
+        .timeline-step { position: relative; z-index: 2; text-align: center; width: 120px; }
+        .timeline-circle { width: 64px; height: 64px; background: #fff; border: 2px solid #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 1.5rem; font-weight: 700; color: #ccc; transition: all 0.5s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .timeline-step.active .timeline-circle { border-color: var(--accent-color); color: var(--accent-color); box-shadow: 0 0 20px rgba(91,124,250,0.3); transform: scale(1.1); }
+        .timeline-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; color: var(--text-primary); transition: color 0.5s; }
+        .timeline-desc { font-size: 0.875rem; color: var(--text-secondary); }
+
+        /* --- WHY CHOOSE US --- */
+        .why-split { display: flex; align-items: center; gap: 4rem; }
+        .why-image-wrapper { flex: 1; position: relative; }
+        .why-image-card { background: linear-gradient(135deg, rgba(91,124,250,0.1), rgba(91,124,250,0.02)); border: 1px solid rgba(91,124,250,0.1); border-radius: 2rem; padding: 4rem; text-align: center; position: relative; overflow: hidden; }
+        .why-content { flex: 1; }
+        .benefit-item { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; }
+        .benefit-icon { width: 32px; height: 32px; background: rgba(16, 185, 129, 0.1); color: #10B981; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.25rem; }
+        .benefit-text h4 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .benefit-text p { color: var(--text-secondary); font-size: 1rem; margin: 0; }
+
+        /* --- PLATFORM PREVIEW --- */
+        .preview-section { background: #111; color: #fff; position: relative; padding: 8rem 2rem 12rem; overflow: hidden; }
+        .preview-blob { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(91,124,250,0.2), transparent 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .browser-mockup { max-width: 1000px; margin: 4rem auto 0; background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.4); position: relative; z-index: 2; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s; cursor: pointer; }
+        .browser-mockup:hover { transform: scale(1.02) translateY(-10px) rotateX(2deg); box-shadow: 0 40px 80px rgba(0,0,0,0.6); }
+        .browser-header { background: #f1f1f1; padding: 12px 1rem; display: flex; gap: 8px; border-bottom: 1px solid #ddd; }
+        .browser-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; } .dot-yellow { background: #ffbd2e; } .dot-green { background: #27c93f; }
+        .browser-content { padding: 2rem; color: #333; height: 500px; background: #fafafa; display: flex; flex-direction: column; gap: 1.5rem; }
+        .mock-dashboard-header { display: flex; justify-content: space-between; align-items: center; }
+        .mock-skeleton-title { width: 200px; height: 32px; background: #eee; border-radius: 8px; }
+        .mock-skeleton-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .mock-skeleton-card { height: 100px; background: #fff; border-radius: 12px; border: 1px solid #eee; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .mock-skeleton-table { flex: 1; background: #fff; border-radius: 12px; border: 1px solid #eee; padding: 1rem; }
+        .mock-skeleton-row { height: 40px; background: #f9f9f9; margin-bottom: 0.5rem; border-radius: 4px; }
+
+        /* --- TESTIMONIALS --- */
+        .testimonials-carousel { display: flex; gap: 2rem; overflow-x: auto; padding: 2rem 0 4rem; scroll-snap-type: x mandatory; -ms-overflow-style: none; scrollbar-width: none; }
+        .testimonials-carousel::-webkit-scrollbar { display: none; }
+        .testimonial-card { min-width: 350px; background: #fff; padding: 2.5rem; border-radius: var(--radius-xl); border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.02); scroll-snap-align: start; }
+        .test-stars { color: #F59E0B; margin-bottom: 1.5rem; display: flex; gap: 0.25rem; }
+        .test-text { font-size: 1.125rem; font-style: italic; color: var(--text-primary); margin-bottom: 2rem; line-height: 1.6; }
+        .test-author { display: flex; align-items: center; gap: 1rem; }
+        .test-avatar { width: 48px; height: 48px; border-radius: 50%; background: #eee; }
+        .test-name { font-weight: 700; color: var(--text-primary); }
+        .test-role { font-size: 0.875rem; color: var(--text-secondary); }
+
+        /* --- FAQ ACCORDION --- */
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { border: 1px solid rgba(0,0,0,0.08); border-radius: 16px; margin-bottom: 1rem; background: #fff; overflow: hidden; transition: box-shadow 0.3s; }
+        .faq-item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .faq-question { padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 600; font-size: 1.125rem; user-select: none; }
+        .faq-icon { transition: transform 0.3s ease; color: var(--text-secondary); }
+        .faq-item.active .faq-icon { transform: rotate(180deg); color: var(--accent-color); }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: #fafafa; }
+        .faq-answer-inner { padding: 0 2rem 1.5rem; color: var(--text-secondary); line-height: 1.6; }
+        .faq-item.active .faq-answer { max-height: 200px; }
+
+        /* --- CTA --- */
+        .cta-box { background: linear-gradient(135deg, #111 0%, #2A3B8F 100%); border-radius: 2rem; padding: 6rem 2rem; text-align: center; color: #fff; position: relative; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.2); }
+        .cta-box::before { content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); pointer-events: none; }
+
+        /* --- FOOTER --- */
+        .footer { background: #fff; border-top: 1px solid rgba(0,0,0,0.05); padding: 6rem 2rem 2rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; max-width: 1200px; margin: 0 auto 4rem; }
+        .footer-brand { margin-bottom: 1.5rem; }
+        .footer-desc { color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem; max-width: 300px; }
+        .footer-title { font-weight: 700; margin-bottom: 1.5rem; font-size: 1rem; }
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { margin-bottom: 1rem; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--accent-color); }
+        .newsletter-form { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        .newsletter-input { padding: 0.75rem 1rem; border: 1px solid #ddd; border-radius: 8px; flex: 1; outline: none; transition: border-color 0.2s; }
+        .newsletter-input:focus { border-color: var(--accent-color); }
+        .footer-bottom { border-top: 1px solid #eee; padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; color: var(--text-secondary); font-size: 0.875rem; max-width: 1200px; margin: 0 auto; }
+        .social-links { display: flex; gap: 1rem; }
+        .social-links a { color: var(--text-secondary); transition: color 0.2s; }
+        .social-links a:hover { color: var(--text-primary); }
+
+        @@media (max-width: 992px) {
+            .hero-title { font-size: 4rem; }
+            .why-split { flex-direction: column; }
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+        }
+        @@media (max-width: 768px) {
+            .hero-title { font-size: 3rem; }
+            .timeline-container { flex-direction: column; align-items: center; gap: 2rem; }
+            .timeline-line { width: 2px; height: 100%; top: 0; left: 50%; transform: translateX(-50%); }
+            .timeline-line-fill { width: 100%; height: 0%; top: 0; left: 0; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PRELOADER -->
+    <div id="preloader">
+        <i data-lucide="book-open" class="loader-icon"></i>
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- NAVIGATION -->
+    <div class="landing-nav-wrapper animate-fade-in">
+        <nav class="landing-nav">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 36px; height: 36px; background: var(--text-primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white;">
+                    <i data-lucide="book"></i>
+                </div>
+                <span style="font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em;">LibrarySpace</span>
+            </div>
+            <div class="nav-links" style="display: flex; gap: 2.5rem; align-items: center;">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#preview">Preview</a>
+                <a href="#faq">FAQ</a>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <a href="/Account/Login" style="color: var(--text-primary); font-weight: 600; text-decoration: none; margin-right: 0.5rem;">Log In</a>
+                <a href="/Account/Register" class="btn btn-primary" style="border-radius: 50px; padding: 0.5rem 1.25rem;">Get Started</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-bg-blob blob-1"></div>
+        <div class="hero-bg-blob blob-2"></div>
+        
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="hero-badge animate-fade-in hover-scale">
+                <span style="display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent-color); box-shadow: 0 0 10px var(--accent-color);"></span>
+                LibrarySpace v2.0 is now live — Experience the future of libraries
+            </div>
+            
+            <h1 class="hero-title animate-fade-in stagger-1">Knowledge infrastructure<br/>for the modern world.</h1>
+            <p class="hero-subtitle animate-fade-in stagger-2">
+                Seamlessly access, manage, and discover millions of resources. A unified digital platform engineered for speed, reliability, and unparalleled beauty.
+            </p>
+            
+            <div class="hero-buttons animate-fade-in stagger-3" style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="/Account/Login" class="btn btn-primary">
+                    Start Building <i data-lucide="arrow-right" style="width: 18px; margin-left: 8px;"></i>
+                </a>
+                <a href="#preview" class="btn btn-secondary">
+                    View Platform
+                </a>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <i data-lucide="mouse"></i>
+        </div>
+    </section>
+
+    <!-- TRUSTED BY (MARQUEE) -->
+    <section class="marquee-wrapper scroll-reveal">
+        <div class="marquee-content">
+            <!-- First Set -->
+            <div class="partner-logo"><i data-lucide="graduation-cap"></i> Stanford University</div>
+            <div class="partner-logo"><i data-lucide="library"></i> National Public Library</div>
+            <div class="partner-logo"><i data-lucide="building-2"></i> Cambridge Institute</div>
+            <div class="partner-logo"><i data-lucide="book-open"></i> Global Research Hub</div>
+            <div class="partner-logo"><i data-lucide="school"></i> Oxford Academy</div>
+            <!-- Duplicate for infinite effect -->
+            <div class="partner-logo"><i data-lucide="graduation-cap"></i> Stanford University</div>
+            <div class="partner-logo"><i data-lucide="library"></i> National Public Library</div>
+            <div class="partner-logo"><i data-lucide="building-2"></i> Cambridge Institute</div>
+            <div class="partner-logo"><i data-lucide="book-open"></i> Global Research Hub</div>
+            <div class="partner-logo"><i data-lucide="school"></i> Oxford Academy</div>
+        </div>
+    </section>
+
+    <!-- STATISTICS -->
+    <section class="section-padding" style="background: #fff;">
+        <div class="container scroll-reveal">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="@(ViewBag.TotalResources ?? 5000)">0</div>
+                    <div class="stat-label">Books & Resources</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="@(ViewBag.TotalStudents ?? 1500)">0</div>
+                    <div class="stat-label">Active Students</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="@(ViewBag.TotalBorrows ?? 2500)" data-suffix="+">0</div>
+                    <div class="stat-label">Total Borrows</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number counter" data-target="99" data-suffix="%">0</div>
+                    <div class="stat-label">Platform Uptime</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- KEY FEATURES -->
+    <section id="features" class="section-padding">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">Engineered for efficiency</h2>
+            <p class="section-subtitle scroll-reveal stagger-1">
+                Everything you need to manage your library resources, encapsulated in one beautifully designed platform.
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card scroll-reveal stagger-1">
+                    <div class="feature-icon"><i data-lucide="search"></i></div>
+                    <h3 class="feature-title">Instant Search</h3>
+                    <p class="feature-desc">Locate any book, magazine, or newspaper instantly across our comprehensive global catalog.</p>
+                    <a href="#" class="feature-link">Learn more <i data-lucide="chevron-right" style="width: 16px;"></i></a>
+                </div>
+                
+                <div class="feature-card scroll-reveal stagger-2">
+                    <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+                    <h3 class="feature-title">Secure Identity</h3>
+                    <p class="feature-desc">Enterprise-grade security and role-based access control for students and administrators.</p>
+                    <a href="#" class="feature-link">Learn more <i data-lucide="chevron-right" style="width: 16px;"></i></a>
+                </div>
+                
+                <div class="feature-card scroll-reveal stagger-3">
+                    <div class="feature-icon"><i data-lucide="database"></i></div>
+                    <h3 class="feature-title">Digital Catalog</h3>
+                    <p class="feature-desc">Manage thousands of physical and digital assets with a unified, intuitive database system.</p>
+                    <a href="#" class="feature-link">Learn more <i data-lucide="chevron-right" style="width: 16px;"></i></a>
+                </div>
+                
+                <div class="feature-card scroll-reveal stagger-4">
+                    <div class="feature-icon"><i data-lucide="arrow-right-left"></i></div>
+                    <h3 class="feature-title">Borrow Management</h3>
+                    <p class="feature-desc">Frictionless borrowing and returning workflows with automated tracking and history logs.</p>
+                    <a href="#" class="feature-link">Learn more <i data-lucide="chevron-right" style="width: 16px;"></i></a>
+                </div>
+
+                <div class="feature-card scroll-reveal stagger-1">
+                    <div class="feature-icon"><i data-lucide="credit-card"></i></div>
+                    <h3 class="feature-title">Fine Tracking</h3>
+                    <p class="feature-desc">Automated fine calculation for overdue items with seamless notification integration.</p>
+                    <a href="#" class="feature-link">Learn more <i data-lucide="chevron-right" style="width: 16px;"></i></a>
+                </div>
+
+                <div class="feature-card scroll-reveal stagger-2">
+                    <div class="feature-icon"><i data-lucide="bar-chart-3"></i></div>
+                    <h3 class="feature-title">Reports & Analytics</h3>
+                    <p class="feature-desc">Generate beautiful visual reports on library usage, popular resources, and user engagement.</p>
+                    <a href="#" class="feature-link">Learn more <i data-lucide="chevron-right" style="width: 16px;"></i></a>
+                </div>
+
+                <div class="feature-card scroll-reveal stagger-3">
+                    <div class="feature-icon"><i data-lucide="bell-ring"></i></div>
+                    <h3 class="feature-title">Real-time Notifications</h3>
+                    <p class="feature-desc">Keep users informed with instant alerts for due dates, reservations, and new arrivals.</p>
+                    <a href="#" class="feature-link">Learn more <i data-lucide="chevron-right" style="width: 16px;"></i></a>
+                </div>
+
+                <div class="feature-card scroll-reveal stagger-4">
+                    <div class="feature-icon"><i data-lucide="zap"></i></div>
+                    <h3 class="feature-title">Zero Latency</h3>
+                    <p class="feature-desc">Built on modern server-side rendering architecture, ensuring lightning-fast interactions.</p>
+                    <a href="#" class="feature-link">Learn more <i data-lucide="chevron-right" style="width: 16px;"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works" class="section-padding" style="background: #fff;">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">A seamless experience</h2>
+            <p class="section-subtitle scroll-reveal stagger-1">
+                From finding a resource to returning it, the workflow is designed to be completely frictionless.
+            </p>
+
+            <div class="timeline-container scroll-reveal stagger-2" id="timeline">
+                <div class="timeline-line"></div>
+                <div class="timeline-line-fill" id="timeline-fill"></div>
+                
+                <div class="timeline-step">
+                    <div class="timeline-circle">1</div>
+                    <div class="timeline-title">Authenticate</div>
+                    <div class="timeline-desc">Secure login</div>
+                </div>
+                
+                <div class="timeline-step">
+                    <div class="timeline-circle">2</div>
+                    <div class="timeline-title">Discover</div>
+                    <div class="timeline-desc">Search resources</div>
+                </div>
+                
+                <div class="timeline-step">
+                    <div class="timeline-circle">3</div>
+                    <div class="timeline-title">Borrow</div>
+                    <div class="timeline-desc">Instant checkout</div>
+                </div>
+                
+                <div class="timeline-step">
+                    <div class="timeline-circle">4</div>
+                    <div class="timeline-title">Read & Learn</div>
+                    <div class="timeline-desc">Utilize material</div>
+                </div>
+                
+                <div class="timeline-step">
+                    <div class="timeline-circle">5</div>
+                    <div class="timeline-title">Return</div>
+                    <div class="timeline-desc">Log history</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WHY CHOOSE US -->
+    <section class="section-padding">
+        <div class="container">
+            <div class="why-split">
+                <div class="why-image-wrapper scroll-reveal">
+                    <div class="why-image-card">
+                        <i data-lucide="layers" style="width: 150px; height: 150px; color: var(--accent-color); margin-bottom: 2rem;"></i>
+                        <h3 style="font-size: 2rem; font-weight: 800; color: var(--text-primary);">The Modern Standard</h3>
+                        <p style="color: var(--text-secondary); margin-top: 1rem;">Replacing outdated legacy software with a beautiful, cloud-native platform.</p>
+                    </div>
+                </div>
+                <div class="why-content scroll-reveal stagger-2">
+                    <h2 style="font-size: 2.5rem; font-weight: 800; margin-bottom: 2.5rem;">Why institutions choose LibrarySpace</h2>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><i data-lucide="cloud"></i></div>
+                        <div class="benefit-text">
+                            <h4>Cloud Based</h4>
+                            <p>Access your library catalog and management tools from anywhere, on any device.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><i data-lucide="lock"></i></div>
+                        <div class="benefit-text">
+                            <h4>Enterprise Security</h4>
+                            <p>Data is encrypted at rest and in transit, with granular role-based permissions.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon"><i data-lucide="smartphone"></i></div>
+                        <div class="benefit-text">
+                            <h4>Fully Responsive</h4>
+                            <p>A flawless experience whether you're using a 4K monitor, a tablet, or a smartphone.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PLATFORM PREVIEW -->
+    <section id="preview" class="preview-section">
+        <div class="preview-blob"></div>
+        <div class="container" style="position: relative; z-index: 2; text-align: center;">
+            <h2 class="section-title scroll-reveal" style="color: #fff;">Beautifully functional.</h2>
+            <p class="section-subtitle scroll-reveal stagger-1" style="color: rgba(255,255,255,0.7);">
+                Take a peek at the administrative dashboard designed to give you total control.
+            </p>
+
+            <div class="browser-mockup scroll-reveal stagger-2">
+                <div class="browser-header">
+                    <div class="browser-dot dot-red"></div>
+                    <div class="browser-dot dot-yellow"></div>
+                    <div class="browser-dot dot-green"></div>
+                </div>
+                <div class="browser-content">
+                    <div class="mock-dashboard-header">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #111; font-family: 'Inter', sans-serif;">Dashboard Overview</div>
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <span style="font-size: 0.875rem; color: #666; font-weight: 500;">Admin User</span>
+                            <div style="width: 40px; height: 40px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center;"><i data-lucide="user" style="width: 20px; color: #999;"></i></div>
+                        </div>
+                    </div>
+                    <div class="mock-skeleton-cards">
+                        <div class="mock-skeleton-card" style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="book" style="width: 16px;"></i> Total Books</div>
+                            <div style="font-size: 1.75rem; font-weight: 800; color: #111;">5,234</div>
+                        </div>
+                        <div class="mock-skeleton-card" style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="users" style="width: 16px;"></i> Active Students</div>
+                            <div style="font-size: 1.75rem; font-weight: 800; color: #111;">1,429</div>
+                        </div>
+                        <div class="mock-skeleton-card" style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="arrow-right-left" style="width: 16px;"></i> Issued Today</div>
+                            <div style="font-size: 1.75rem; font-weight: 800; color: #111;">45</div>
+                        </div>
+                        <div class="mock-skeleton-card" style="padding: 1.25rem; display: flex; flex-direction: column; justify-content: center;">
+                            <div style="font-size: 0.875rem; color: #666; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="alert-circle" style="width: 16px; color: #DC2626;"></i> Overdue</div>
+                            <div style="font-size: 1.75rem; font-weight: 800; color: #DC2626;">12</div>
+                        </div>
+                    </div>
+                    <div class="mock-skeleton-table" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <div style="font-weight: 600; padding: 0.5rem 1rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; color: #444;">
+                            <span>Recent Activity</span><span>Status</span>
+                        </div>
+                        <div class="mock-skeleton-row" style="background: transparent; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; border-bottom: 1px solid #f5f5f5;">
+                            <span style="font-size: 0.875rem; color: #333; font-weight: 500;">John Doe borrowed "The Great Gatsby"</span><span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: #e0f2fe; color: #0284c7; border-radius: 4px; font-weight: 600;">Issued</span>
+                        </div>
+                        <div class="mock-skeleton-row" style="background: transparent; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem; border-bottom: 1px solid #f5f5f5;">
+                            <span style="font-size: 0.875rem; color: #333; font-weight: 500;">Jane Smith returned "Clean Code"</span><span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: #dcfce7; color: #166534; border-radius: 4px; font-weight: 600;">Returned</span>
+                        </div>
+                        <div class="mock-skeleton-row" style="background: transparent; display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
+                            <span style="font-size: 0.875rem; color: #333; font-weight: 500;">Admin added 5 new books to catalog</span><span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: #f3f4f6; color: #374151; border-radius: 4px; font-weight: 600;">System</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="section-padding" style="background: #fff; overflow: hidden;">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">Trusted by educators</h2>
+            <p class="section-subtitle scroll-reveal stagger-1">
+                See what librarians and administrators are saying about LibrarySpace.
+            </p>
+        </div>
+        
+        <div class="testimonials-carousel scroll-reveal stagger-2" style="padding-left: calc(50vw - 600px);">
+            <!-- Card 1 -->
+            <div class="testimonial-card">
+                <div class="test-stars">
+                    <i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i>
+                </div>
+                <p class="test-text">"The speed and reliability of LibrarySpace completely transformed how our university manages its vast collection of resources. Absolutely indispensable."</p>
+                <div class="test-author">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+Jenkins&background=random" class="test-avatar" alt="Avatar">
+                    <div>
+                        <div class="test-name">Sarah Jenkins</div>
+                        <div class="test-role">Head Librarian, Stanford</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 2 -->
+            <div class="testimonial-card">
+                <div class="test-stars">
+                    <i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i>
+                </div>
+                <p class="test-text">"Finally, a library system that doesn't look like it was built in 1995. The UI is gorgeous, and the students actually enjoy using it to find books."</p>
+                <div class="test-author">
+                    <img src="https://ui-avatars.com/api/?name=David+Chen&background=random" class="test-avatar" alt="Avatar">
+                    <div>
+                        <div class="test-name">David Chen</div>
+                        <div class="test-role">IT Director, Cambridge</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 3 -->
+            <div class="testimonial-card">
+                <div class="test-stars">
+                    <i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i>
+                </div>
+                <p class="test-text">"The automated fine tracking and reporting features have saved our staff hundreds of hours every month. It's truly an enterprise-grade platform."</p>
+                <div class="test-author">
+                    <img src="https://ui-avatars.com/api/?name=Emily+Carter&background=random" class="test-avatar" alt="Avatar">
+                    <div>
+                        <div class="test-name">Emily Carter</div>
+                        <div class="test-role">Operations Manager</div>
+                    </div>
+                </div>
+            </div>
+            <!-- Card 4 -->
+            <div class="testimonial-card">
+                <div class="test-stars">
+                    <i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i><i data-lucide="star" style="fill: currentColor; width: 16px;"></i>
+                </div>
+                <p class="test-text">"Seamless role-based access control means we can safely grant different permissions to library assistants without worrying about security breaches."</p>
+                <div class="test-author">
+                    <img src="https://ui-avatars.com/api/?name=Michael+Ross&background=random" class="test-avatar" alt="Avatar">
+                    <div>
+                        <div class="test-name">Michael Ross</div>
+                        <div class="test-role">Security Lead</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section-padding">
+        <div class="container">
+            <h2 class="section-title scroll-reveal">Frequently Asked Questions</h2>
+            <p class="section-subtitle scroll-reveal stagger-1">Got questions? We've got answers.</p>
+
+            <div class="faq-container scroll-reveal stagger-2">
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I borrow books?
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Simply log into your student account, browse or search the catalog for your desired resource, and click "Borrow". If the book is available, it will be instantly added to your active borrow records.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How are fines calculated?
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Fines are automatically calculated by the system when a book is kept past its due date. A fixed daily rate is applied for every day the item is overdue until it is returned.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is my data secure?
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Yes. LibrarySpace employs enterprise-grade encryption for data at rest and in transit. Role-based access ensures that sensitive information is only accessible to authorized personnel.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Can librarians generate custom reports?
+                        <i data-lucide="chevron-down" class="faq-icon"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="faq-answer-inner">
+                            Absolutely! The platform includes a comprehensive analytics dashboard where administrators can view and export detailed reports on borrowing trends, fine collections, and inventory status.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section-padding" style="background: #fff;">
+        <div class="container">
+            <div class="cta-box scroll-reveal">
+                <h2 style="font-size: 3rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -0.03em;">Ready to upgrade your library?</h2>
+                <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); max-width: 600px; margin: 0 auto 3rem;">
+                    Join thousands of students, educators, and administrators utilizing LibrarySpace daily. Get started in minutes.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center;">
+                    <a href="/Account/Register" class="btn btn-primary" style="background: #fff; color: var(--text-primary); border: none; padding: 1rem 2.5rem; font-size: 1rem; border-radius: 50px;">
+                        Get Started
+                    </a>
+                    <a href="/Account/Login" class="btn btn-secondary" style="border-color: rgba(255,255,255,0.3); color: #fff; padding: 1rem 2.5rem; font-size: 1rem; border-radius: 50px;">
+                        Login to Portal
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-grid scroll-reveal">
+            <div>
+                <div class="footer-brand" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="width: 32px; height: 32px; background: var(--text-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                        <i data-lucide="book" style="width: 16px; height: 16px;"></i>
+                    </div>
+                    <span style="font-weight: 800; font-size: 1.25rem;">LibrarySpace</span>
+                </div>
+                <p class="footer-desc">
+                    The modern standard for digital library management. Engineered for speed, security, and a beautiful user experience.
+                </p>
+                <div class="social-links">
+                    <a href="#"><i data-lucide="twitter"></i></a>
+                    <a href="#"><i data-lucide="github"></i></a>
+                    <a href="#"><i data-lucide="linkedin"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <div class="footer-title">Platform</div>
+                <ul class="footer-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#preview">Dashboard</a></li>
+                    <li><a href="#">Integrations</a></li>
+                    <li><a href="#">Pricing</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <div class="footer-title">Resources</div>
+                <ul class="footer-links">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Support Center</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <div class="footer-title">Stay Updated</div>
+                <p style="color: var(--text-secondary); font-size: 0.875rem;">Subscribe to our newsletter for the latest updates.</p>
+                <form class="newsletter-form" onsubmit="event.preventDefault();">
+                    <input type="email" class="newsletter-input" placeholder="Enter your email" required>
+                    <button type="submit" class="btn btn-primary" style="padding: 0 1rem; border-radius: 8px;"><i data-lucide="send" style="width: 16px;"></i></button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="footer-bottom scroll-reveal stagger-2">
+            <div>&copy; @DateTime.Now.Year LibrarySpace. All rights reserved.</div>
+            <div style="display: flex; gap: 1.5rem;">
+                <a href="#" style="color: inherit; text-decoration: none;">Privacy Policy</a>
+                <a href="#" style="color: inherit; text-decoration: none;">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script>
+        lucide.createIcons();
+        
+        // Remove Preloader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const preloader = document.getElementById('preloader');
+                preloader.style.opacity = '0';
+                setTimeout(() => { preloader.style.display = 'none'; }, 600);
+            }, 500); // Artificial delay to show animation
+        });
+
+        // Intersection Observer for Scroll Animations
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    
+                    // Trigger timeline animation if it's the timeline section
+                    if (entry.target.id === 'timeline') {
+                        document.getElementById('timeline-fill').style.width = '100%';
+                        const steps = entry.target.querySelectorAll('.timeline-step');
+                        steps.forEach((step, index) => {
+                            setTimeout(() => { step.classList.add('active'); }, index * 300);
+                        });
+                    }
+
+                    // Trigger counters
+                    if (entry.target.querySelector('.counter')) {
+                        const counters = entry.target.querySelectorAll('.counter');
+                        counters.forEach(counter => {
+                            const target = +counter.getAttribute('data-target');
+                            const suffix = counter.getAttribute('data-suffix') || '';
+                            const duration = 2000; // ms
+                            const step = target / (duration / 16); // 60fps
+                            let current = 0;
+                            
+                            const updateCounter = () => {
+                                current += step;
+                                if (current < target) {
+                                    counter.innerText = Math.ceil(current) + suffix;
+                                    requestAnimationFrame(updateCounter);
+                                } else {
+                                    counter.innerText = target + suffix;
+                                }
+                            };
+                            updateCounter();
+                        });
+                    }
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => { observer.observe(el); });
+
+        // FAQ Accordion
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                const item = q.parentElement;
+                const isActive = item.classList.contains('active');
+                
+                // Close all others
+                document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+                
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

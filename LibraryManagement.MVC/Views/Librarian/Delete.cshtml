@@ -1,0 +1,61 @@
+@model LibraryManagement.MVC.Models.Librarian
+
+@{
+    ViewData["Title"] = "Delete Librarian";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-trash3 me-2"></i>Delete Librarian</h1>
+        <p>This action is permanent and cannot be reversed.</p>
+    </div>
+</div>
+
+<main class="container page-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-md">
+                <div class="card-body p-5 text-center">
+                    <div class="confirm-icon danger mx-auto mb-4">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1">Delete "@Model.Name"?</h4>
+                    <p class="text-muted mb-4">This librarian account will be <strong class="text-danger">permanently deleted</strong>. This action cannot be undone.</p>
+
+                    <div class="bg-light rounded-3 p-4 text-start mb-5">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-person-badge me-1"></i>Employee ID</span>
+                                <div class="detail-value mb-0"><code>@Model.EmployeeId</code></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-clock me-1"></i>Shift</span>
+                                <div class="detail-value mb-0">@Model.Shift</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-envelope me-1"></i>Email</span>
+                                <div class="detail-value mb-0">@Model.Email</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-telephone me-1"></i>Phone</span>
+                                <div class="detail-value mb-0">@Model.Phone</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-action="Index" class="btn btn-secondary px-4">
+                            <i class="bi bi-arrow-left me-1"></i> Cancel
+                        </a>
+                        <form asp-action="Delete" asp-route-id="@Model.Id" data-loading="Deleting librarian…">
+                            <input type="hidden" asp-for="Id" />
+                            <button type="submit" class="btn btn-danger px-4 fw-bold">
+                                <i class="bi bi-trash3 me-1"></i> Yes, Delete Librarian
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

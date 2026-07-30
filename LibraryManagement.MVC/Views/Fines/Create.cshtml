@@ -1,0 +1,74 @@
+@model LibraryManagement.MVC.Models.Fine
+
+@{
+    ViewData["Title"] = "Add Fine";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-plus-circle me-2"></i>Add Fine</h1>
+        <p>Manually register a fine for a student.</p>
+    </div>
+</div>
+
+<main class="container page-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-bottom p-4">
+                    <h5 class="mb-0 text-primary fw-bold">Fine Details</h5>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="Create">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="row g-4">
+                            <!-- Student -->
+                            <div class="col-md-6">
+                                <label asp-for="StudentId" class="form-label fw-semibold">Student <span class="text-danger">*</span></label>
+                                <select asp-for="StudentId" class="form-select" asp-items="ViewBag.StudentId" required>
+                                    <option value="">-- Select Student --</option>
+                                </select>
+                                <span asp-validation-for="StudentId" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Borrow Record -->
+                            <div class="col-md-6">
+                                <label asp-for="BorrowId" class="form-label fw-semibold">Borrow Record ID <span class="text-danger">*</span></label>
+                                <select asp-for="BorrowId" class="form-select" asp-items="ViewBag.BorrowId" required>
+                                    <option value="">-- Select Borrow Record --</option>
+                                </select>
+                                <span asp-validation-for="BorrowId" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Amount -->
+                            <div class="col-md-6">
+                                <label asp-for="Amount" class="form-label fw-semibold">Amount (₹) <span class="text-danger">*</span></label>
+                                <input asp-for="Amount" class="form-control" type="number" step="0.01" required />
+                                <span asp-validation-for="Amount" class="text-danger small"></span>
+                            </div>
+
+                            <!-- Reason -->
+                            <div class="col-md-12">
+                                <label asp-for="Reason" class="form-label fw-semibold">Reason</label>
+                                <input asp-for="Reason" class="form-control" placeholder="e.g. Late Return, Damaged Book" />
+                                <span asp-validation-for="Reason" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                            <a asp-action="Index" class="btn btn-light px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4 fw-semibold">
+                                <i class="bi bi-check2-circle me-1"></i> Save Fine
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

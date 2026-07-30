@@ -1,0 +1,61 @@
+@model LibraryManagement.MVC.Models.Book
+
+@{
+    ViewData["Title"] = "Delete Book";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-trash3 me-2"></i>Delete Book</h1>
+        <p>This action is permanent and cannot be reversed.</p>
+    </div>
+</div>
+
+<main class="container page-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-md">
+                <div class="card-body p-5 text-center">
+                    <div class="confirm-icon danger mx-auto mb-4">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1">Delete "@Model.Title"?</h4>
+                    <p class="text-muted mb-4">This book and all associated data will be <strong class="text-danger">permanently deleted</strong>. This action cannot be undone.</p>
+
+                    <div class="bg-light rounded-3 p-4 text-start mb-5">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-person me-1"></i>Author</span>
+                                <div class="detail-value mb-0">@Model.Author</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-upc me-1"></i>ISBN</span>
+                                <div class="detail-value mb-0"><code>@Model.ISBN</code></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-tag me-1"></i>Category</span>
+                                <div class="detail-value mb-0">@Model.Category</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-journals me-1"></i>Copies</span>
+                                <div class="detail-value mb-0">@Model.AvailableCopies / @Model.TotalCopies</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-action="Index" class="btn btn-secondary px-4">
+                            <i class="bi bi-arrow-left me-1"></i> Cancel
+                        </a>
+                        <form asp-action="Delete" asp-route-id="@Model.Id" data-loading="Deleting book…">
+                            <input type="hidden" asp-for="Id" />
+                            <button type="submit" class="btn btn-danger px-4 fw-bold">
+                                <i class="bi bi-trash3 me-1"></i> Yes, Delete Book
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

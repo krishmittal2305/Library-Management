@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Details – Library Management System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+        LibraryMS
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#mainNav" aria-controls="mainNav"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="bi bi-grid-fill"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="students.html"><i class="bi bi-people-fill"></i> Students</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="bi bi-person-vcard-fill me-2"></i>Student Details</h1>
+      <p>View student information and their borrow history.</p>
+    </div>
+  </div>
+
+  <main class="container page-wrapper">
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html" class="text-primary text-decoration-none">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="students.html" class="text-primary text-decoration-none">Students</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Student Details</li>
+      </ol>
+    </nav>
+    
+    <div id="alertSection" class="d-none mb-4">
+      <div class="alert alert-danger" id="alertMsg"></div>
+    </div>
+
+    <div id="detailSection" class="d-none">
+      <div class="row g-4 mb-5">
+        <!-- Student Info -->
+        <div class="col-lg-4">
+          <div class="card h-100 shadow-sm border">
+            <div class="card-header bg-white pt-3 pb-2"><i class="bi bi-person text-primary me-2"></i><span class="fw-bold">Student Profile</span></div>
+            <div class="card-body">
+              <div class="text-center mb-4">
+                <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:80px;height:80px;font-size:2.5rem;">
+                  <i class="bi bi-person"></i>
+                </div>
+                <h4 class="fw-bold mb-1" id="detName"></h4>
+                <p class="text-muted mb-0" id="detEnrollment"></p>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span class="text-muted"><i class="bi bi-envelope me-2"></i>Email</span>
+                  <span class="fw-500" id="detEmail"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span class="text-muted"><i class="bi bi-telephone me-2"></i>Phone</span>
+                  <span class="fw-500" id="detPhone"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span class="text-muted"><i class="bi bi-building me-2"></i>Department</span>
+                  <span class="fw-500" id="detDepartment"></span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span class="text-muted"><i class="bi bi-mortarboard me-2"></i>Semester</span>
+                  <span class="fw-500" id="detSemester"></span>
+                </li>
+              </ul>
+              <div class="mt-4 d-grid gap-2">
+                <a href="#" class="btn btn-outline-primary" id="btnEdit"><i class="bi bi-pencil"></i> Edit Student</a>
+                <a href="#" class="btn btn-outline-danger" id="btnDelete"><i class="bi bi-trash"></i> Delete Student</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Borrow History -->
+        <div class="col-lg-8">
+          <div class="card h-100 shadow-sm border">
+            <div class="card-header bg-white pt-3 pb-2"><i class="bi bi-clock-history text-primary me-2"></i><span class="fw-bold">Borrow History</span></div>
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="ps-4">Date</th>
+                      <th>Action</th>
+                      <th>Book Title</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="historyTableBody">
+                    <!-- Populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container text-center">
+      <span><i class="bi bi-book-half me-1 text-primary"></i>Library Management System &copy; 2026</span>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/students.js"></script>
+  <script src="js/books.js"></script>
+  <script src="js/app.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      setActiveNav();
+      const id = getParam("id");
+      if (!id) { showError("No student ID was provided."); return; }
+
+      const student = getStudentById(id);
+      if (!student) { showError("The requested student does not exist."); return; }
+
+      document.getElementById("detailSection").classList.remove("d-none");
+
+      document.getElementById("detName").textContent = student.name;
+      document.getElementById("detEnrollment").textContent = student.enrollmentNo;
+      document.getElementById("detEmail").textContent = student.email;
+      document.getElementById("detPhone").textContent = student.phone;
+      document.getElementById("detDepartment").textContent = student.department;
+      document.getElementById("detSemester").textContent = student.semester;
+
+      document.getElementById("btnEdit").href = `student-edit.html?id=${student.studentId}`;
+      document.getElementById("btnDelete").href = `student-delete.html?id=${student.studentId}`;
+
+      renderHistory(student.studentId);
+    });
+
+    function renderHistory(studentId) {
+      const history = JSON.parse(localStorage.getItem("lms_history")) || [];
+      const studentHistory = history.filter(h => h.studentId === Number(studentId));
+      
+      const tbody = document.getElementById("historyTableBody");
+      
+      if (studentHistory.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">No borrow history found for this student.</td></tr>`;
+        return;
+      }
+
+      // Sort newest first
+      studentHistory.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+      tbody.innerHTML = studentHistory.map(h => {
+        const book = getBookById(h.id);
+        const title = book ? book.title : "Unknown Book (Deleted)";
+        
+        let actionBadge = "";
+        if(h.action === "borrow") actionBadge = `<span class="badge bg-primary">Borrowed</span>`;
+        if(h.action === "return") actionBadge = `<span class="badge bg-success">Returned</span>`;
+
+        // Determine if currently held (if it's a borrow and the book is currently borrowed by THIS student)
+        let status = "-";
+        if (h.action === "borrow" && book && !book.available && book.borrower && book.borrower.studentId === studentId) {
+          status = `<span class="text-warning fw-bold"><i class="bi bi-clock"></i> Holding</span>`;
+        } else if (h.action === "borrow") {
+          status = `<span class="text-muted">Returned</span>`;
+        }
+
+        return `
+          <tr>
+            <td class="ps-4">${formatDate(h.date)}</td>
+            <td>${actionBadge}</td>
+            <td class="fw-bold">${escHtml(title)}</td>
+            <td>${status}</td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function showError(msg) {
+      document.getElementById("alertSection").classList.remove("d-none");
+      document.getElementById("alertMsg").innerHTML = `<i class="bi bi-exclamation-triangle-fill me-2"></i>${msg} <a href="students.html" class="alert-link ms-2">Go back to Students List.</a>`;
+    }
+
+    function escHtml(str) {
+      if(!str) return "";
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+@model LibraryManagement.MVC.ViewModels.RegisterViewModel
+
+@{
+    Layout = null; 
+    ViewData["Title"] = "Create Account - MPOnline";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    
+    <!-- Custom Design System CSS -->
+    <link rel="stylesheet" href="~/css/styles/variables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/forms.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/components.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/animations.css" asp-append-version="true" />
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .auth-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .auth-form-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 4rem;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .auth-illustration-side {
+            flex: 1;
+            background: #000000;
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+        @@media (min-width: 992px) {
+            .auth-illustration-side {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+        .auth-glass-box {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-xl);
+            padding: 3rem;
+            max-width: 400px;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-background text-gray-900">
+
+    <div class="auth-container">
+        
+        <!-- Left Side: Form -->
+        <div class="auth-form-side animate-fade-in">
+            
+            <a href="/" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-weight: 700; font-size: 1.25rem; margin-bottom: 2rem; text-decoration: none;">
+                <div style="width: 32px; height: 32px; background: var(--text-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                    <i data-lucide="book" style="width: 16px; height: 16px;"></i>
+                </div>
+                LibrarySpace
+            </a>
+
+            <div>
+                <h1 style="font-size: 2rem; letter-spacing: -0.03em; margin-bottom: 0.5rem;">Create an account</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Join LibrarySpace to start managing your resources.</p>
+
+                <form asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    
+                    <div asp-validation-summary="ModelOnly" style="background: rgba(220, 38, 38, 0.1); color: #DC2626; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 0.875rem;"></div>
+
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label asp-for="FirstName" class="form-label">First Name</label>
+                            <input asp-for="FirstName" class="form-control" placeholder="John" required autofocus />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                            <label asp-for="LastName" class="form-label">Last Name</label>
+                            <input asp-for="LastName" class="form-control" placeholder="Doe" required />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label">Email Address</label>
+                        <input asp-for="Email" type="email" class="form-control" placeholder="john.doe@example.com" required />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Create a strong password" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Repeat your password" required />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.875rem; font-size: 1rem; margin-top: 1rem;">
+                        Create Account
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 2rem; font-size: 0.875rem; color: var(--text-secondary);">
+                        Already have an account? <a href="/Account/Login" style="font-weight: 600;">Sign in here</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Right Side: Illustration -->
+        <div class="auth-illustration-side animate-fade-in stagger-2">
+            <!-- Removed blue gradients for complete black background -->
+            
+            <div class="auth-glass-box hover-scale">
+                <div style="width: 64px; height: 64px; background: rgba(255,255,255,0.1); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1.5rem;">
+                    <i data-lucide="zap" style="width: 32px; height: 32px;"></i>
+                </div>
+                <h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: white;">Instant Access</h2>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9375rem; margin-bottom: 0;">
+                    Get started in seconds. No complex approval processes, just pure productivity.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</body>
+</html>

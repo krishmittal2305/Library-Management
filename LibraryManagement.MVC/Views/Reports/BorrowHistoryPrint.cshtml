@@ -1,0 +1,7 @@
+@model IEnumerable<LibraryManagement.MVC.Models.BorrowRecord>
+@{ Layout = "_PrintLayout"; }
+<table>
+    <thead><tr><th>ID</th><th>Student Name</th><th>Book Title</th><th>Borrow Date</th><th>Due Date</th><th>Return Date</th></tr></thead>
+    <tbody>@foreach (var item in Model) { <tr><td>@item.Id</td><td><strong>@item.Student?.Name</strong></td><td>@item.Book?.Title</td><td>@item.BorrowDate.ToShortDateString()</td><td>@item.DueDate.ToShortDateString()</td><td>@(item.ReturnDate?.ToShortDateString() ?? "Not Returned")</td></tr> }</tbody>
+</table>
+<div class="mt-3 text-end fw-bold">Total Records: @Model.Count()</div>

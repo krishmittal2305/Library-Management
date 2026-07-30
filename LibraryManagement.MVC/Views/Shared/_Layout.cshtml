@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] – Library Management</title>
+    
+    <!-- Custom Design System CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'DM Sans', sans-serif; }
+    </style>
+    <link rel="stylesheet" href="~/css/styles/variables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/components.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/forms.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/tables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/animations.css" asp-append-version="true" />
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    
+    <!-- Choices.js for modern select menus -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <style>
+        /* Custom Theme for Choices.js to match our design system */
+        .choices { margin-bottom: 0; }
+        .choices__inner {
+            background-color: var(--bg-color) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: var(--radius-md) !important;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            font-size: 0.875rem;
+            color: var(--text-primary) !important;
+            box-shadow: var(--shadow-sm);
+        }
+        .choices[data-type*="select-one"]::after {
+            border-color: var(--text-secondary) transparent transparent transparent;
+        }
+        .choices.is-open[data-type*="select-one"]::after {
+            border-color: transparent transparent var(--text-secondary) transparent;
+        }
+        .choices__list--dropdown {
+            background-color: var(--bg-color) !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: var(--radius-md) !important;
+            box-shadow: var(--shadow-md) !important;
+            color: var(--text-primary) !important;
+            margin-top: 4px;
+        }
+        .choices__list--dropdown .choices__item--selectable.is-highlighted {
+            background-color: var(--bg-hover) !important;
+            color: var(--text-primary) !important;
+        }
+        .choices__input {
+            background-color: var(--bg-color) !important;
+            color: var(--text-primary) !important;
+        }
+        .choices__input::placeholder { color: var(--text-secondary); }
+    </style>
+</head>
+<body>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="app-wrapper animate-fade-in">
+            
+            <!-- Sidebar -->
+            <aside class="sidebar" id="mainSidebar">
+                <a asp-controller="Home" asp-action="Dashboard" class="sidebar-header">
+                    <div style="width: 32px; height: 32px; border-radius: 8px; background: #111111; color: white; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="book-open" style="width: 20px; height: 20px;"></i>
+                    </div>
+                    <span>LibraryAdmin</span>
+                </a>
+                
+                <nav class="sidebar-nav">
+                    <a asp-controller="Home" asp-action="Dashboard" class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")">
+                        <i data-lucide="layout-dashboard"></i> <span>Dashboard</span>
+                    </a>
+                    
+                    <div style="margin-top: 1.5rem; margin-bottom: 0.5rem; padding: 0 0.75rem; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Catalog</div>
+                    
+                    <a asp-controller="Books" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Books" ? "active" : "")">
+                        <i data-lucide="library"></i> <span>Books</span>
+                    </a>
+                    <a asp-controller="Magazines" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Magazines" ? "active" : "")">
+                        <i data-lucide="book-marked"></i> <span>Magazines</span>
+                    </a>
+                    <a asp-controller="Newspapers" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Newspapers" ? "active" : "")">
+                        <i data-lucide="newspaper"></i> <span>Newspapers</span>
+                    </a>
+
+                    <div style="margin-top: 1.5rem; margin-bottom: 0.5rem; padding: 0 0.75rem; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Users</div>
+                    
+                    <a asp-controller="Student" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Student" ? "active" : "")">
+                        <i data-lucide="users"></i> <span>Students</span>
+                    </a>
+                    <a asp-controller="Librarian" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Librarian" ? "active" : "")">
+                        <i data-lucide="user-cog"></i> <span>Librarians</span>
+                    </a>
+
+                    <div style="margin-top: 1.5rem; margin-bottom: 0.5rem; padding: 0 0.75rem; font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em;">Operations</div>
+                    
+                    <a asp-controller="Borrow" asp-action="Create" class="sidebar-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Create" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Borrow" ? "active" : "")">
+                        <i data-lucide="arrow-right-left"></i> <span>Issue Return</span>
+                    </a>
+                    <a asp-controller="Borrow" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Action"]?.ToString() == "Index" && ViewContext.RouteData.Values["Controller"]?.ToString() == "Borrow" ? "active" : "")">
+                        <i data-lucide="undo-2"></i> <span>History</span>
+                    </a>
+                    <a asp-controller="Fines" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Fines" ? "active" : "")">
+                        <i data-lucide="credit-card"></i> <span>Fines</span>
+                    </a>
+                    <a asp-controller="Reports" asp-action="Index" class="sidebar-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Reports" ? "active" : "")">
+                        <i data-lucide="bar-chart-2"></i> <span>Reports</span>
+                    </a>
+                </nav>
+                
+                <div style="margin-top: auto; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" style="display:none;"></form>
+                    <a href="#" onclick="document.getElementById('logoutForm').submit();" class="sidebar-link" style="color: #DC2626;">
+                        <i data-lucide="log-out"></i> <span>Logout</span>
+                    </a>
+                </div>
+            </aside>
+            
+            <!-- Main Content Wrapper -->
+            <main class="main-content">
+                <!-- Top Navbar -->
+                <header class="top-header">
+                    <div style="display: flex; align-items: center; gap: 1.5rem;">
+                        <button id="sidebarToggle" class="btn btn-ghost" style="padding: 0.5rem; display: none;">
+                            <i data-lucide="menu"></i>
+                        </button>
+                        
+                        <div style="color: var(--text-secondary); font-size: 0.875rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+                            <span>Library Management</span>
+                            <i data-lucide="chevron-right" style="width: 14px; height: 14px;"></i>
+                            <span style="color: var(--text-primary);">@ViewData["Title"]</span>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <form asp-controller="Search" asp-action="Index" method="get" style="display: flex; align-items: center; position: relative;">
+                            <i data-lucide="search" style="position: absolute; left: 1rem; color: var(--text-secondary); width: 16px; height: 16px;"></i>
+                            <input type="text" name="query" class="form-control" placeholder="Search catalog..." style="padding-left: 2.5rem; width: 250px; border-radius: var(--radius-pill); background-color: var(--card-bg); border: 1px solid var(--border-color);" />
+                        </form>
+                        
+                        <div style="display: flex; align-items: center; gap: 0.5rem; border-left: 1px solid var(--border-color); padding-left: 1rem; margin-left: 0.5rem;">
+                            <button class="btn btn-ghost" style="padding: 0.5rem; border-radius: 50%; color: var(--text-secondary);" title="Toggle Theme">
+                                <i data-lucide="moon"></i>
+                            </button>
+                            <button class="btn btn-ghost" style="padding: 0.5rem; border-radius: 50%; color: var(--text-secondary);" title="Notifications">
+                                <i data-lucide="bell"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="profile-dropdown" style="position: relative; margin-left: 0.5rem;">
+                            <div onclick="toggleProfileDropdown()" style="display: flex; align-items: center; gap: 0.75rem; cursor: pointer;">
+                                <div style="text-align: right; display: flex; flex-direction: column;">
+                                    <span style="font-weight: 600; font-size: 0.875rem; color: var(--text-primary); line-height: 1.2;">@(User.Identity.Name ?? "Admin")</span>
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary);">Administrator</span>
+                                </div>
+                                <img src="https://ui-avatars.com/api/?name=@(User.Identity.Name ?? "Admin")&background=111111&color=fff&rounded=true" alt="Profile" style="width: 36px; height: 36px; border-radius: 50%; box-shadow: var(--shadow-sm);" />
+                            </div>
+                            
+                            <div id="profileDropdownMenu" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 0.5rem; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-md); min-width: 150px; z-index: 1000; overflow: hidden;">
+                                <form asp-controller="Account" asp-action="Logout" method="post" style="margin: 0;">
+                                    <button type="submit" style="width: 100%; text-align: left; background: none; border: none; padding: 0.75rem 1rem; color: var(--text-primary); font-size: 0.875rem; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;" onmouseover="this.style.backgroundColor='var(--bg-hover)'" onmouseout="this.style.backgroundColor='transparent'">
+                                        <i data-lucide="log-out" style="width: 16px; height: 16px;"></i> Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                
+                <!-- Render Body -->
+                <div class="container animate-fade-in stagger-1">
+                    @RenderBody()
+                </div>
+            </main>
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
+    
+    <script>
+        lucide.createIcons();
+        
+        function toggleProfileDropdown() {
+            const menu = document.getElementById('profileDropdownMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.profile-dropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                const menu = document.getElementById('profileDropdownMenu');
+                if (menu) menu.style.display = 'none';
+            }
+        });
+    </script>
+    
+    <!-- Choices.js Initialization -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Choices.js on all select elements with class 'form-select' or 'form-control'
+            const selectElements = document.querySelectorAll('select.form-select, select.form-control');
+            selectElements.forEach(function(el) {
+                new Choices(el, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    shouldSort: false
+                });
+            });
+        });
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

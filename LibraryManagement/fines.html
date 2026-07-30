@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fine Management – Library Management System</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+        LibraryMS
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#mainNav" aria-controls="mainNav"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="bi bi-grid-fill"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="bi bi-book-fill"></i> Books</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="students.html"><i class="bi bi-people-fill"></i> Students</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="fines.html"><i class="bi bi-cash-stack"></i> Fines</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="bi bi-cash-stack me-2"></i>Fine Management</h1>
+      <p>View and manage late return fines.</p>
+    </div>
+  </div>
+
+  <main class="container page-wrapper">
+    <!-- Toolbar -->
+    <div class="card mb-4">
+      <div class="card-body p-3 d-flex flex-column flex-sm-row gap-3 align-items-sm-center justify-content-between">
+        <div class="search-wrapper flex-grow-1" style="max-width:350px;">
+          <i class="bi bi-search"></i>
+          <input id="searchFineInput" type="text" class="form-control" placeholder="Search by student or book..." />
+        </div>
+        <div class="d-flex flex-wrap gap-2 align-items-center">
+          <label for="filterFineStatus" class="form-label mb-0 fw-bold text-muted">Status:</label>
+          <select id="filterFineStatus" class="form-select" style="width:auto;">
+            <option value="all">All Fines</option>
+            <option value="pending" selected>Pending</option>
+            <option value="paid">Paid</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fine Table -->
+    <div class="table-wrapper border shadow-sm mb-5">
+      <table class="table" id="finesTable">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Student</th>
+            <th scope="col">Book</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="finesTableBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container text-center">
+      <span><i class="bi bi-book-half me-1 text-primary"></i>Library Management System &copy; 2026</span>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/students.js"></script>
+  <script src="js/books.js"></script>
+  <script src="js/fines.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      setActiveNav();
+      renderFines();
+
+      document.getElementById("searchFineInput").addEventListener("input", e => {
+        renderFines();
+      });
+
+      document.getElementById("filterFineStatus").addEventListener("change", e => {
+        renderFines();
+      });
+    });
+
+    function renderFines() {
+      const query = document.getElementById("searchFineInput").value.trim().toLowerCase();
+      const statusFilter = document.getElementById("filterFineStatus").value;
+      const tbody = document.getElementById("finesTableBody");
+      
+      let fines = getAllFines();
+
+      // Resolve student and book objects for filtering and display
+      const displayData = fines.map(f => {
+        const student = getStudentById(f.studentId);
+        const book = getBookById(f.bookId);
+        return {
+          ...f,
+          studentName: student ? student.name : "Unknown Student",
+          studentEnrollment: student ? student.enrollmentNo : "",
+          bookTitle: book ? book.title : "Unknown Book",
+        };
+      });
+
+      let filtered = displayData;
+
+      if (query) {
+        filtered = filtered.filter(f =>
+          f.studentName.toLowerCase().includes(query) ||
+          f.studentEnrollment.toLowerCase().includes(query) ||
+          f.bookTitle.toLowerCase().includes(query)
+        );
+      }
+
+      if (statusFilter === "pending") {
+        filtered = filtered.filter(f => !f.paid);
+      } else if (statusFilter === "paid") {
+        filtered = filtered.filter(f => f.paid);
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="table-no-results py-5">
+              <i class="bi bi-check2-circle fs-2 d-block mb-3 text-success"></i>
+              <p class="mb-0 fw-500">No fines found matching your criteria.</p>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((f, idx) => `
+        <tr>
+          <td class="text-muted fw-500">${idx + 1}</td>
+          <td>
+            <div class="fw-bold text-dark">${escHtml(f.studentName)}</div>
+            <small class="text-muted">${escHtml(f.studentEnrollment)}</small>
+          </td>
+          <td class="text-secondary">${escHtml(f.bookTitle)}</td>
+          <td><strong class="text-danger">₹${f.amount}</strong></td>
+          <td>
+            ${f.paid 
+              ? `<span class="badge bg-success">Paid on ${formatDate(f.paidDate)}</span>` 
+              : `<span class="badge bg-warning text-dark">Pending</span>`
+            }
+          </td>
+          <td>
+            ${!f.paid ? `
+              <button class="btn btn-sm btn-outline-success fw-bold" onclick="payFine('${f.fineId}')">
+                <i class="bi bi-currency-rupee"></i> Mark Paid
+              </button>
+            ` : `<span class="text-muted fst-italic small">Settled</span>`}
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function payFine(fineId) {
+      if (confirm("Are you sure you want to mark this fine as paid?")) {
+        const success = markFineAsPaid(fineId);
+        if (success) {
+          showToast("Fine marked as paid successfully!", "success");
+          renderFines(); // Re-render table
+        } else {
+          showToast("Error marking fine as paid.", "danger");
+        }
+      }
+    }
+
+    function escHtml(str) {
+      if(!str) return "";
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+  </script>
+</body>
+</html>

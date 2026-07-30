@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Book – Library Management System</title>
+  <meta name="description" content="Add a new book to the library collection." />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+        LibraryMS
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#mainNav" aria-controls="mainNav"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="bi bi-grid-fill"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="add.html"><i class="bi bi-plus-circle-fill"></i> Add Book</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="bi bi-plus-circle-fill me-2"></i>Add New Book</h1>
+      <p>Fill in the details below to add a new book to the collection.</p>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="container page-wrapper">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html" class="text-primary text-decoration-none">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Add Book</li>
+      </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-7">
+        <div class="card">
+          <div class="card-header d-flex align-items-center gap-2">
+            <i class="bi bi-journal-plus text-primary fs-5"></i>
+            <span>Book Information</span>
+          </div>
+          <div class="card-body">
+
+            <!-- Add Book Form -->
+            <form id="addBookForm" novalidate>
+
+              <!-- Title -->
+              <div class="mb-4">
+                <label for="inputTitle" class="form-label">
+                  <i class="bi bi-book me-1 text-primary"></i>Book Title <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control" id="inputTitle"
+                       placeholder="e.g. The Great Gatsby"
+                       required minlength="1" maxlength="200" />
+                <div class="invalid-feedback">Please enter the book title.</div>
+              </div>
+
+              <!-- Author -->
+              <div class="mb-4">
+                <label for="inputAuthor" class="form-label">
+                  <i class="bi bi-person me-1 text-primary"></i>Author <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control" id="inputAuthor"
+                       placeholder="e.g. F. Scott Fitzgerald"
+                       required minlength="1" maxlength="150" />
+                <div class="invalid-feedback">Please enter the author's name.</div>
+              </div>
+
+              <!-- ISBN -->
+              <div class="mb-4">
+                <label for="inputISBN" class="form-label">
+                  <i class="bi bi-upc me-1 text-primary"></i>ISBN <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control font-monospace" id="inputISBN"
+                       placeholder="e.g. 978-0-7432-7356-5"
+                       pattern="^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$"
+                       required />
+                <div class="form-text text-muted">Format: 978-0-XXX-XXXXX-X or similar ISBN-10/13</div>
+                <div class="invalid-feedback">Please enter a valid ISBN number.</div>
+              </div>
+
+              <!-- Published Date -->
+              <div class="mb-4">
+                <label for="inputDate" class="form-label">
+                  <i class="bi bi-calendar me-1 text-primary"></i>Published Date <span class="text-danger">*</span>
+                </label>
+                <input type="date" class="form-control" id="inputDate" required />
+                <div class="invalid-feedback">Please select the published date.</div>
+              </div>
+
+              <!-- Action Buttons -->
+              <hr class="section-divider" />
+              <div class="d-flex gap-3">
+                <button type="submit" class="btn btn-primary" id="btnSave">
+                  <i class="bi bi-floppy-fill"></i> Save Book
+                </button>
+                <a href="index.html" class="btn btn-outline-secondary">
+                  <i class="bi bi-x-lg"></i> Cancel
+                </a>
+              </div>
+
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container text-center">
+      <span><i class="bi bi-book-half me-1 text-primary"></i>Library Management System &copy; 2026</span>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/books.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      setActiveNav();
+
+      document.getElementById("addBookForm").addEventListener("submit", handleSubmit);
+    });
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const form = e.target;
+
+      if (!validateForm(form)) return;
+
+      const bookData = {
+        title:        document.getElementById("inputTitle").value,
+        author:       document.getElementById("inputAuthor").value,
+        isbn:         document.getElementById("inputISBN").value,
+        publishedDate: document.getElementById("inputDate").value
+      };
+
+      addBook(bookData);
+
+      // Show success, then redirect
+      showToast("Book added successfully!", "success");
+      setTimeout(() => goTo("index.html"), 1200);
+    }
+  </script>
+</body>
+</html>

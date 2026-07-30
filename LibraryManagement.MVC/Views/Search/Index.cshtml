@@ -1,0 +1,115 @@
+@model LibraryManagement.MVC.ViewModels.GlobalSearchViewModel
+
+@{
+    ViewData["Title"] = "Global Search Results";
+    var totalResults = Model.Books.Count + Model.Publications.Count + Model.Students.Count + Model.Librarians.Count;
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-search me-2"></i>Search Results</h1>
+        <p>Showing results for: <strong class="text-white">"@Model.Query"</strong></p>
+    </div>
+</div>
+
+<main class="container page-wrapper">
+    @if (string.IsNullOrWhiteSpace(Model.Query))
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-search fs-1"></i>
+            <h4 class="mt-3">Enter a search term above</h4>
+        </div>
+    }
+    else if (totalResults == 0)
+    {
+        <div class="text-center py-5 text-muted">
+            <i class="bi bi-emoji-frown fs-1"></i>
+            <h4 class="mt-3">No results found for "@Model.Query"</h4>
+            <p>Try searching for a different term, name, or ID.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @if (Model.Books.Any())
+            {
+                <div class="col-12">
+                    <h3 class="border-bottom pb-2 mb-3"><i class="bi bi-book text-primary me-2"></i>Books (@Model.Books.Count)</h3>
+                    <div class="list-group">
+                        @foreach (var book in Model.Books)
+                        {
+                            <a asp-controller="Books" asp-action="Details" asp-route-id="@book.Id" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1 fw-bold">@book.Title</h5>
+                                    <small class="text-muted">By @book.Author | ISBN: @book.ISBN</small>
+                                </div>
+                                <span class="badge @(book.IsAvailable ? "bg-success" : "bg-danger") rounded-pill">
+                                    @(book.IsAvailable ? "Available" : "Checked Out")
+                                </span>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.Publications.Any())
+            {
+                <div class="col-12">
+                    <h3 class="border-bottom pb-2 mb-3"><i class="bi bi-journal-text text-warning me-2"></i>Publications (@Model.Publications.Count)</h3>
+                    <div class="list-group">
+                        @foreach (var pub in Model.Publications)
+                        {
+                            <div class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="mb-1 fw-bold">@pub.Title</h5>
+                                    <small class="text-muted">@pub.Type | Publisher: @pub.Publisher</small>
+                                </div>
+                                <span class="badge @(pub.IsAvailable ? "bg-success" : "bg-danger") rounded-pill">
+                                    @(pub.IsAvailable ? "Available" : "Checked Out")
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.Students.Any())
+            {
+                <div class="col-12">
+                    <h3 class="border-bottom pb-2 mb-3"><i class="bi bi-people text-info me-2"></i>Students (@Model.Students.Count)</h3>
+                    <div class="list-group">
+                        @foreach (var student in Model.Students)
+                        {
+                            <a asp-controller="Student" asp-action="Details" asp-route-id="@student.Id" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1 fw-bold">@student.Name</h5>
+                                    <small class="text-muted">@student.EnrollmentNo</small>
+                                </div>
+                                <p class="mb-1">@student.Department, Semester @student.Semester</p>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (Model.Librarians.Any())
+            {
+                <div class="col-12">
+                    <h3 class="border-bottom pb-2 mb-3"><i class="bi bi-person-badge text-danger me-2"></i>Librarians (@Model.Librarians.Count)</h3>
+                    <div class="list-group">
+                        @foreach (var lib in Model.Librarians)
+                        {
+                            <a asp-controller="Librarian" asp-action="Details" asp-route-id="@lib.Id" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1 fw-bold">@lib.Name</h5>
+                                    <small class="text-muted">@lib.EmployeeId</small>
+                                </div>
+                                <p class="mb-1">Shift: @lib.Shift | Contact: @lib.Email</p>
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</main>

@@ -1,0 +1,135 @@
+@model LibraryManagement.MVC.ViewModels.LoginViewModel
+
+@{
+    Layout = null; 
+    ViewData["Title"] = "Sign in - LibrarySpace";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    
+    <!-- Custom Design System CSS -->
+    <link rel="stylesheet" href="~/css/styles/variables.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/forms.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/components.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/styles/animations.css" asp-append-version="true" />
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .auth-container {
+            display: flex;
+            min-height: 100vh;
+            background: #000000;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 1rem;
+        }
+        /* Background decorations */
+        .bg-circle-1 {
+            display: none;
+        }
+        .bg-circle-2 {
+            display: none;
+        }
+
+        .auth-form-side {
+            background: white;
+            padding: 3rem;
+            max-width: 440px;
+            width: 100%;
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-background text-gray-900">
+
+    <div class="auth-container">
+        <!-- Decorative background elements -->
+        <div class="bg-circle-1"></div>
+        <div class="bg-circle-2"></div>
+        <!-- Back Button -->
+        <a href="/" style="position: absolute; top: 2rem; left: 2rem; display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.875rem; font-weight: 500; transition: color 0.2s; z-index: 20;">
+            <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+            Back to Home
+        </a>
+        
+        <!-- Center Box: Form -->
+        <div class="auth-form-side animate-fade-in">
+            
+            <a href="/" style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; color: var(--text-primary); font-weight: 700; font-size: 1.25rem; margin-bottom: 2rem; text-decoration: none;">
+                <div style="width: 32px; height: 32px; background: var(--text-primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                    <i data-lucide="book" style="width: 16px; height: 16px;"></i>
+                </div>
+                LibrarySpace
+            </a>
+
+            <div>
+                <h1 style="font-size: 1.75rem; letter-spacing: -0.03em; margin-bottom: 0.5rem; text-align: center;">Welcome back</h1>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; text-align: center;">Enter your credentials to securely access your account.</p>
+
+                <form asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    
+                    <div asp-validation-summary="ModelOnly" style="background: rgba(220, 38, 38, 0.1); color: #DC2626; padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem; font-size: 0.875rem;"></div>
+
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label">Email Address</label>
+                        <input asp-for="Email" class="form-control" placeholder="you@example.com" required autofocus />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <label asp-for="Password" class="form-label" style="margin-bottom: 0;">Password</label>
+                            <a href="#" style="font-size: 0.875rem; font-weight: 500; text-decoration: none;">Forgot password?</a>
+                        </div>
+                        <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                            <label asp-for="RememberMe" class="form-check-label">Keep me signed in</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.875rem; font-size: 1rem; margin-top: 1rem;">
+                        Sign In
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+                        Don't have an account? <a href="/Account/Register" style="font-weight: 600; text-decoration: none;">Request access</a>
+                    </p>
+
+                    <!-- Sample Credentials Section -->
+                    <div style="margin-top: 2rem; padding: 1.25rem; background: var(--bg-color); border-radius: var(--radius-md); font-size: 0.875rem; color: var(--text-secondary); border: 1px dashed var(--border-color);">
+                        <p style="margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary);"><i data-lucide="info" style="width: 16px; height: 16px; display: inline-block; margin-right: 4px; vertical-align: text-bottom;"></i> Demo Access</p>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                            <span>Email:</span>
+                            <span style="font-family: monospace; font-weight: 600; color: var(--text-primary);">admin@library.com</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Password:</span>
+                            <span style="font-family: monospace; font-weight: 600; color: var(--text-primary);">Admin123!</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

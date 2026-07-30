@@ -1,0 +1,61 @@
+@model LibraryManagement.MVC.Models.Student
+
+@{
+    ViewData["Title"] = "Delete Student";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-trash3 me-2"></i>Delete Student</h1>
+        <p>This action is permanent and cannot be reversed.</p>
+    </div>
+</div>
+
+<main class="container page-wrapper">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-md">
+                <div class="card-body p-5 text-center">
+                    <div class="confirm-icon danger mx-auto mb-4">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1">Delete "@Model.Name"?</h4>
+                    <p class="text-muted mb-4">This student and all associated borrow records will be <strong class="text-danger">permanently deleted</strong>. This action cannot be undone.</p>
+
+                    <div class="bg-light rounded-3 p-4 text-start mb-5">
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-card-text me-1"></i>Enrollment No</span>
+                                <div class="detail-value mb-0"><code>@Model.EnrollmentNo</code></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-building me-1"></i>Department</span>
+                                <div class="detail-value mb-0">@Model.Department</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-layers me-1"></i>Semester</span>
+                                <div class="detail-value mb-0">Semester @Model.Semester</div>
+                            </div>
+                            <div class="col-sm-6">
+                                <span class="detail-label"><i class="bi bi-envelope me-1"></i>Email</span>
+                                <div class="detail-value mb-0">@Model.Email</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-action="Index" class="btn btn-secondary px-4">
+                            <i class="bi bi-arrow-left me-1"></i> Cancel
+                        </a>
+                        <form asp-action="Delete" asp-route-id="@Model.Id" data-loading="Deleting student…">
+                            <input type="hidden" asp-for="Id" />
+                            <button type="submit" class="btn btn-danger px-4 fw-bold">
+                                <i class="bi bi-trash3 me-1"></i> Yes, Delete Student
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

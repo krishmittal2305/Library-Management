@@ -1,0 +1,109 @@
+@{
+    ViewData["Title"] = "Reports Dashboard";
+}
+
+<div class="page-header">
+    <div class="container">
+        <h1><i class="bi bi-bar-chart-fill me-2"></i>Reports & Analytics</h1>
+        <p>Access and export comprehensive data reports for all library modules.</p>
+    </div>
+</div>
+
+<main class="container page-wrapper">
+    <div class="row g-4 mb-5">
+        
+        <!-- Books Report -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-primary mb-3"><i class="bi bi-book"></i></div>
+                    <h5 class="fw-bold">Books Inventory</h5>
+                    <p class="text-muted small mb-4">View total copies, availability, and export catalog.</p>
+                    <a asp-action="Books" class="btn btn-outline-primary rounded-pill px-4">View Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Students Report -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-success mb-3"><i class="bi bi-mortarboard"></i></div>
+                    <h5 class="fw-bold">Registered Students</h5>
+                    <p class="text-muted small mb-4">Export active student enrollments and details.</p>
+                    <a asp-action="Students" class="btn btn-outline-success rounded-pill px-4">View Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Librarians Report -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-info mb-3"><i class="bi bi-person-badge"></i></div>
+                    <h5 class="fw-bold">Librarians Roster</h5>
+                    <p class="text-muted small mb-4">Staff details, shifts, and contact information.</p>
+                    <a asp-action="Librarians" class="btn btn-outline-info rounded-pill px-4">View Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Borrow History Report -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-warning mb-3"><i class="bi bi-arrow-left-right"></i></div>
+                    <h5 class="fw-bold">Borrow History</h5>
+                    <p class="text-muted small mb-4">Complete transaction logs of borrows and returns.</p>
+                    <a asp-action="BorrowHistory" class="btn btn-outline-warning rounded-pill px-4">View Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fines Report -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-danger mb-3"><i class="bi bi-cash-stack"></i></div>
+                    <h5 class="fw-bold">Fines & Penalties</h5>
+                    <p class="text-muted small mb-4">Export financial records of pending and paid fines.</p>
+                    <a asp-action="Fines" class="btn btn-outline-danger rounded-pill px-4">View Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Magazines Report -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 mb-3" style="color: var(--accent);"><i class="bi bi-journal-text"></i></div>
+                    <h5 class="fw-bold">Magazines</h5>
+                    <p class="text-muted small mb-4">Inventory of all monthly and weekly magazines.</p>
+                    <a asp-action="Magazines" class="btn btn-outline-dark rounded-pill px-4" style="border-color: var(--accent); color: var(--accent);">View Report</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Newspapers Report -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 border-0 shadow-sm hover-elevate">
+                <div class="card-body text-center p-4">
+                    <div class="display-4 text-secondary mb-3"><i class="bi bi-newspaper"></i></div>
+                    <h5 class="fw-bold">Newspapers</h5>
+                    <p class="text-muted small mb-4">Daily editions, languages, and availability logs.</p>
+                    <a asp-action="Newspapers" class="btn btn-outline-secondary rounded-pill px-4">View Report</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<style>
+    .hover-elevate {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-elevate:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>

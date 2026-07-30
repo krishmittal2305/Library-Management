@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Book – Library Management System</title>
+  <meta name="description" content="Edit an existing book's details in the library." />
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <span class="brand-icon"><i class="bi bi-book-half"></i></span>
+        LibraryMS
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#mainNav" aria-controls="mainNav"
+              aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto gap-1">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html"><i class="bi bi-grid-fill"></i> Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="add.html"><i class="bi bi-plus-circle-fill"></i> Add Book</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="bi bi-pencil-fill me-2"></i>Edit Book</h1>
+      <p>Update the book's information below.</p>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="container page-wrapper">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="index.html" class="text-primary text-decoration-none">Dashboard</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Book</li>
+      </ol>
+    </nav>
+
+    <!-- Not Found -->
+    <div id="notFound" class="d-none">
+      <div class="card text-center py-5">
+        <div class="card-body">
+          <div class="confirm-icon danger mx-auto mb-3">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+          </div>
+          <h4 class="fw-700">Book Not Found</h4>
+          <p class="text-muted">Could not find the book to edit.</p>
+          <a href="index.html" class="btn btn-primary mt-2">
+            <i class="bi bi-arrow-left me-1"></i> Back to Book List
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div id="editSection" class="d-none">
+      <div class="row justify-content-center">
+        <div class="col-lg-7">
+          <div class="card">
+            <div class="card-header d-flex align-items-center gap-2">
+              <i class="bi bi-journal-pen text-primary fs-5"></i>
+              <span>Edit Book Information</span>
+              <span id="editBookTitle" class="ms-auto badge bg-primary-soft text-primary fw-600"></span>
+            </div>
+            <div class="card-body">
+
+              <form id="editBookForm" novalidate>
+
+                <!-- Title -->
+                <div class="mb-4">
+                  <label for="editTitle" class="form-label">
+                    <i class="bi bi-book me-1 text-primary"></i>Book Title <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" id="editTitle"
+                         placeholder="e.g. The Great Gatsby"
+                         required minlength="1" maxlength="200" />
+                  <div class="invalid-feedback">Please enter the book title.</div>
+                </div>
+
+                <!-- Author -->
+                <div class="mb-4">
+                  <label for="editAuthor" class="form-label">
+                    <i class="bi bi-person me-1 text-primary"></i>Author <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control" id="editAuthor"
+                         placeholder="e.g. F. Scott Fitzgerald"
+                         required minlength="1" maxlength="150" />
+                  <div class="invalid-feedback">Please enter the author's name.</div>
+                </div>
+
+                <!-- ISBN -->
+                <div class="mb-4">
+                  <label for="editISBN" class="form-label">
+                    <i class="bi bi-upc me-1 text-primary"></i>ISBN <span class="text-danger">*</span>
+                  </label>
+                  <input type="text" class="form-control font-monospace" id="editISBN"
+                         placeholder="e.g. 978-0-7432-7356-5"
+                         required />
+                  <div class="form-text text-muted">Format: 978-0-XXX-XXXXX-X or similar ISBN-10/13</div>
+                  <div class="invalid-feedback">Please enter a valid ISBN number.</div>
+                </div>
+
+                <!-- Published Date -->
+                <div class="mb-4">
+                  <label for="editDate" class="form-label">
+                    <i class="bi bi-calendar me-1 text-primary"></i>Published Date <span class="text-danger">*</span>
+                  </label>
+                  <input type="date" class="form-control" id="editDate" required />
+                  <div class="invalid-feedback">Please select the published date.</div>
+                </div>
+
+                <!-- Buttons -->
+                <hr class="section-divider" />
+                <div class="d-flex flex-wrap gap-3">
+                  <button type="submit" class="btn btn-primary" id="btnUpdate">
+                    <i class="bi bi-floppy-fill"></i> Save Changes
+                  </button>
+                  <a href="index.html" class="btn btn-outline-secondary" id="btnCancel">
+                    <i class="bi bi-x-lg"></i> Cancel
+                  </a>
+                  <a href="#" class="btn btn-outline-primary ms-auto" id="btnViewDetails">
+                    <i class="bi bi-eye"></i> View Details
+                  </a>
+                </div>
+
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /editSection -->
+
+  </main>
+
+  <footer>
+    <div class="container text-center">
+      <span><i class="bi bi-book-half me-1 text-primary"></i>Library Management System &copy; 2026</span>
+    </div>
+  </footer>
+
+  <div id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/books.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    let currentBookId = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setActiveNav();
+
+      const id = getParam("id");
+      if (!id) { showNotFound(); return; }
+
+      const book = getBookById(id);
+      if (!book) { showNotFound(); return; }
+
+      currentBookId = book.id;
+      loadForm(book);
+
+      document.getElementById("editBookForm").addEventListener("submit", handleUpdate);
+    });
+
+    function showNotFound() {
+      document.getElementById("notFound").classList.remove("d-none");
+    }
+
+    function loadForm(book) {
+      document.title = `Edit "${book.title}" – Library Management System`;
+
+      document.getElementById("editSection").classList.remove("d-none");
+      document.getElementById("editBookTitle").textContent = `ID: ${book.id}`;
+      document.getElementById("editTitle").value   = book.title;
+      document.getElementById("editAuthor").value  = book.author;
+      document.getElementById("editISBN").value    = book.isbn;
+      document.getElementById("editDate").value    = book.publishedDate;
+
+      document.getElementById("btnViewDetails").href = `details.html?id=${book.id}`;
+      document.getElementById("btnCancel").href      = `index.html`;
+    }
+
+    function handleUpdate(e) {
+      e.preventDefault();
+      const form = e.target;
+      if (!validateForm(form)) return;
+
+      const updates = {
+        title:         document.getElementById("editTitle").value.trim(),
+        author:        document.getElementById("editAuthor").value.trim(),
+        isbn:          document.getElementById("editISBN").value.trim(),
+        publishedDate: document.getElementById("editDate").value
+      };
+
+      updateBook(currentBookId, updates);
+      showToast("Book updated successfully!", "success");
+      setTimeout(() => goTo("index.html"), 1200);
+    }
+  </script>
+</body>
+</html>

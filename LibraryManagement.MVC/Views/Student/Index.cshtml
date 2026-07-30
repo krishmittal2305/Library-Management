@@ -1,0 +1,109 @@
+@model LibraryManagement.MVC.ViewModels.StudentIndexViewModel
+
+@{
+    ViewData["Title"] = "Students";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+    <div>
+        <h1 style="font-size: 2rem; margin-bottom: 0.5rem; letter-spacing: -0.03em;">Student Directory</h1>
+        <p style="color: var(--text-secondary); font-size: 1rem; margin-bottom: 0;">Manage registered students in the library system.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i data-lucide="plus" style="width: 18px; margin-right: 0.5rem;"></i> Add Student
+    </a>
+</div>
+
+<div class="card animate-fade-in stagger-1" style="padding: 0; overflow: hidden;">
+    <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-color);">
+        <form method="get" asp-action="Index" style="display: flex; gap: 1rem; align-items: center;">
+            <div style="position: relative; flex: 1; max-width: 400px;">
+                <i data-lucide="search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); width: 18px;"></i>
+                <input type="text" name="searchQuery" value="@Model.SearchQuery" class="form-control" placeholder="Search by Name, Enrollment No..." style="padding-left: 2.5rem; background: var(--card-bg);" />
+            </div>
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </form>
+    </div>
+
+    <div class="table-responsive" style="border: none; border-radius: 0;">
+        <table class="table" style="margin: 0;">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>Enrollment No</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Semester</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Students.Any())
+                {
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: var(--text-secondary); padding: 3rem;">No students found matching your criteria.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var student in Model.Students)
+                    {
+                        <tr>
+                            <td style="color: var(--text-secondary); font-weight: 500;">@student.Id</td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">@student.EnrollmentNo</td>
+                            <td style="font-weight: 600; color: var(--text-primary);">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(student.Name)&background=F3F4F6&color=111111&rounded=true" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;" />
+                                    @student.Name
+                                </div>
+                            </td>
+                            <td>@student.Department</td>
+                            <td>@student.Semester</td>
+                            <td style="text-align: right;">
+                                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                    <a asp-action="Details" asp-route-id="@student.Id" class="btn btn-ghost" style="padding: 0.5rem;" title="View Details">
+                                        <i data-lucide="eye" style="width: 18px;"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@student.Id" class="btn btn-ghost" style="padding: 0.5rem;" title="Edit">
+                                        <i data-lucide="edit-2" style="width: 18px;"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@student.Id" class="btn btn-ghost" style="padding: 0.5rem;" title="Delete">
+                                        <i data-lucide="trash-2" style="width: 18px; color: #DC2626;"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="pagination">
+            <span style="color: var(--text-secondary); font-size: 0.875rem;">Page @Model.CurrentPage of @Model.TotalPages</span>
+            <div style="display: flex; gap: 0.5rem;">
+                @if (Model.CurrentPage > 1)
+                {
+                    <a class="page-btn" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-searchQuery="@Model.SearchQuery">
+                        <i data-lucide="chevron-left" style="width: 16px;"></i>
+                    </a>
+                }
+                
+                @{ int _mP = 5; int _sP = Math.Max(1, Model.CurrentPage - _mP/2); int _eP = Math.Min(Model.TotalPages, _sP + _mP - 1); if(_eP - _sP + 1 < _mP){_sP = Math.Max(1, _eP - _mP + 1);} }
+                @for (int i = _sP; i <= _eP; i++)
+                {
+                    <a class="page-btn @(i == Model.CurrentPage ? "active" : "")" asp-action="Index" asp-route-page="@i" asp-route-searchQuery="@Model.SearchQuery">@i</a>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a class="page-btn" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-searchQuery="@Model.SearchQuery">
+                        <i data-lucide="chevron-right" style="width: 16px;"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>

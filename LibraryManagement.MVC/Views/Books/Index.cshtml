@@ -1,0 +1,152 @@
+@model LibraryManagement.MVC.ViewModels.BookListViewModel
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+    <div>
+        <h1 style="font-size: 2rem; margin-bottom: 0.5rem; letter-spacing: -0.03em;">Library Catalog</h1>
+        <p style="color: var(--text-secondary); font-size: 1rem; margin-bottom: 0;">Manage and discover the library's book collection.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i data-lucide="plus" style="width: 18px; margin-right: 0.5rem;"></i> Add Book
+    </a>
+</div>
+
+<div class="card animate-fade-in stagger-1" style="padding: 0; overflow: hidden;">
+    <div style="padding: 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-color);">
+        <form method="get" asp-action="Index" style="display: flex; gap: 1rem; align-items: center;">
+            <div style="position: relative; flex: 1; max-width: 400px;">
+                <i data-lucide="search" style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-secondary); width: 18px;"></i>
+                <input type="text" name="searchQuery" value="@Model.SearchQuery" class="form-control" placeholder="Search by Title, Author, ISBN..." style="padding-left: 2.5rem; background: var(--card-bg);" />
+            </div>
+            <button type="submit" class="btn btn-secondary">Search</button>
+        </form>
+    </div>
+
+    <div class="table-responsive" style="border: none; border-radius: 0;">
+        <table class="table" style="margin: 0;">
+            <thead>
+                <tr>
+                    <th style="width: 60px;">Cover</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>ISBN</th>
+                    <th>Publisher</th>
+                    <th>Category</th>
+                    <th>Copies</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Books.Any())
+                {
+                    <tr>
+                        <td colspan="9" style="text-align: center; color: var(--text-secondary); padding: 3rem;">No books found matching your criteria.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var book in Model.Books)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(book.Thumbnail))
+                                {
+                                    <img src="@book.Thumbnail" alt="Cover" style="width: 40px; height: 56px; object-fit: cover; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);" />
+                                }
+                                else if (!string.IsNullOrEmpty(book.ISBN))
+                                {
+                                    var initials = book.Title != null && book.Title.Length >= 2 ? book.Title.Substring(0, 2).Replace("'", "").Replace("\"", "") : "BK";
+                                    <img src="https://covers.openlibrary.org/b/isbn/@(book.ISBN)-S.jpg?default=false" 
+                                         onerror="this.onerror=null; this.outerHTML='<div style=&quot;width: 40px; height: 56px; background: linear-gradient(135deg, var(--accent-color), #2563eb); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: white; box-shadow: var(--shadow-sm); text-transform: uppercase;&quot; title=&quot;Cover&quot;>@initials</div>';" 
+                                         alt="Cover" style="width: 40px; height: 56px; object-fit: cover; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);" />
+                                }
+                                else
+                                {
+                                    <div style="width: 40px; height: 56px; background: linear-gradient(135deg, var(--accent-color), #2563eb); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; color: white; box-shadow: var(--shadow-sm); text-transform: uppercase;" title="@book.Title">
+                                        @(book.Title != null && book.Title.Length >= 2 ? book.Title.Substring(0, 2) : "BK")
+                                    </div>
+                                }
+                            </td>
+                            <td style="font-weight: 600; color: var(--text-primary);">@book.Title</td>
+                            <td>@book.Author</td>
+                            <td style="font-family: monospace; color: var(--text-secondary);">@(book.ISBN ?? "N/A")</td>
+                            <td>@(book.Publisher ?? "Unknown")</td>
+                            <td>
+                                <span class="badge" style="background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-secondary);">@book.Category</span>
+                            </td>
+                            <td>@book.AvailableCopies / @book.TotalCopies</td>
+                            <td>
+                                @if (book.AvailableCopies == 0)
+                                {
+                                    <span class="badge badge-danger">Issued</span>
+                                }
+                                else if (book.AvailableCopies < book.TotalCopies)
+                                {
+                                    <span class="badge badge-warning">Issued (@(book.TotalCopies - book.AvailableCopies))</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-success">Available</span>
+                                }
+                            </td>
+                            <td style="text-align: right;">
+                                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                    @if (book.AvailableCopies > 0)
+                                    {
+                                        <a asp-controller="Borrow" asp-action="Create" asp-route-bookId="@book.Id" class="btn btn-ghost" style="padding: 0.5rem;" title="Borrow">
+                                            <i data-lucide="arrow-right-left" style="width: 18px; color: var(--accent-color);"></i>
+                                        </a>
+                                    }
+                                    @if (book.AvailableCopies < book.TotalCopies)
+                                    {
+                                        <a asp-controller="Borrow" asp-action="Index" asp-route-searchQuery="@book.Title" asp-route-filterStatus="active" class="btn btn-ghost" style="padding: 0.5rem;" title="Return">
+                                            <i data-lucide="undo-2" style="width: 18px; color: #10B981;"></i>
+                                        </a>
+                                    }
+                                    <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-ghost" style="padding: 0.5rem;" title="Edit">
+                                        <i data-lucide="edit-2" style="width: 18px;"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@book.Id" class="btn btn-ghost" style="padding: 0.5rem;" title="Delete">
+                                        <i data-lucide="trash-2" style="width: 18px; color: #DC2626;"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <div class="pagination">
+            <span style="color: var(--text-secondary); font-size: 0.875rem;">Page @Model.CurrentPage of @Model.TotalPages</span>
+            <div style="display: flex; gap: 0.5rem;">
+                @if (Model.CurrentPage > 1)
+                {
+                    <a class="page-btn" asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-searchQuery="@Model.SearchQuery">
+                        <i data-lucide="chevron-left" style="width: 16px;"></i>
+                    </a>
+                }
+                
+                @{ int _mP = 5; int _sP = Math.Max(1, Model.CurrentPage - _mP/2); int _eP = Math.Min(Model.TotalPages, _sP + _mP - 1); if(_eP - _sP + 1 < _mP){_sP = Math.Max(1, _eP - _mP + 1);} }
+                @for (int i = _sP; i <= _eP; i++)
+                {
+                    <a class="page-btn @(i == Model.CurrentPage ? "active" : "")" asp-action="Index" asp-route-page="@i" asp-route-searchQuery="@Model.SearchQuery">@i</a>
+                }
+
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <a class="page-btn" asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-searchQuery="@Model.SearchQuery">
+                        <i data-lucide="chevron-right" style="width: 16px;"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>
