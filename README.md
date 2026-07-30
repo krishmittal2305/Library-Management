@@ -320,14 +320,6 @@ Contributions are welcome! To contribute to this project:
 This project is licensed under the [MIT License](LICENSE). 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
----
-
-## 👨‍💻 Author
-
-**Aditya**
-- **GitHub:** [@Aditya4860](https://github.com/Aditya4860)
-- **LinkedIn:** [LinkedIn Profile](https://www.linkedin.com/in/aditya-jain0315/)
-- **Email:** [aditya0315@gmail.com](mailto:your.aditya0315@gmail.com)
 
 ---
 <div align="center">
